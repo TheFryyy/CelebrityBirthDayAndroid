@@ -3,7 +3,6 @@ package com.example.celebrities;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.LruCache;
-
 import com.android.volley.Cache;
 import com.android.volley.Network;
 import com.android.volley.RequestQueue;

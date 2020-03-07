@@ -3,35 +3,31 @@ package com.example.celebrities;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private DatePicker datePicker;
+    private Accelerometer accelerometer;
+    public float shakeSensitivity = 5.0f;
 
     private String[] months;
 
@@ -39,6 +35,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        accelerometer = new Accelerometer(this);
+        accelerometer.setListener(new Accelerometer.Listener() {
+            @Override
+            public void onTranslation(float tx, float ty, float tz) {
+                if (tx > shakeSensitivity || tx< -shakeSensitivity) {
+                    searchCelebrities();
+                }
+
+            }
+        });
 
         getSupportActionBar().setBackgroundDrawable(
                 new ColorDrawable(getResources().getColor(R.color.purple)));
@@ -53,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume()
     {
         super.onResume();
+
+        accelerometer.register();
+
         /* *****  Search for  the saved date and update the DatePicker when resuming the activity  ***** */
         int year = loadDate()[0];
         int month = loadDate()[1];
@@ -64,6 +74,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+    }
+
+    protected  void onPause()
+    {
+        super.onPause();
+
+        accelerometer.unregister();
     }
 
     protected void saveDate(int year, int month, int dayOfMonth){ // function which save the date using shared preferences to make the date persistent
@@ -83,49 +100,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void onClick(View view) {
         if (view.getId() == R.id.searchButtonAndProgress){
-            RequestQueue queue = Volley.newRequestQueue(this);
-            String url ="https://www.thefamousbirthdays.com/"+months[datePicker.getMonth()]+"-"+datePicker.getDayOfMonth();
-            final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
-            final Button searchButton = (Button) findViewById(R.id.searchButton);
-
-            progressBar.setVisibility(View.VISIBLE);
-            searchButton.setText("Searching ...");
-            searchButton.setEnabled(false);
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            progressBar.setVisibility(View.INVISIBLE);
-                            searchButton.setText("Search");
-
-                            List<Profile> profiles = new ArrayList<>();
-
-                            Document doc = Jsoup.parse(response);
-                            Elements elements = doc.select(".item");
-                            for (Element element : elements) {
-                                Profile profile = new Profile();
-                                profile.setTitle(element.select(".details a").text());
-                                profile.setProfession(element.select(".details p").text());
-                                profile.setImageURL(element.select(".thumb img").attr("src"));
-                                profiles.add(profile);
-                            }
-
-                            Intent i = new Intent(MainActivity.this, SearchResultsActivity.class);
-                            i.putExtra("date",months[datePicker.getMonth()]+" "+datePicker.getDayOfMonth());
-                            i.putExtra("profiles", new ProfileListBundle(profiles));
-                            startActivity(i);
-
-                            searchButton.setEnabled(true);
-
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(),"Didn't work",Toast.LENGTH_SHORT).show();
-                }
-            });
-            // Add the request to the RequestQueue.
-            queue.add(stringRequest);
+            searchCelebrities();
         }
+    }
+
+    public void searchCelebrities()
+    {
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url ="https://www.thefamousbirthdays.com/"+months[datePicker.getMonth()]+"-"+datePicker.getDayOfMonth();
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        final Button searchButton = (Button) findViewById(R.id.searchButton);
+
+        progressBar.setVisibility(View.VISIBLE);
+        searchButton.setText("Searching ...");
+        searchButton.setEnabled(false);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressBar.setVisibility(View.INVISIBLE);
+                        searchButton.setText("Search");
+
+                        List<Profile> profiles = new ArrayList<>();
+
+                        Document doc = Jsoup.parse(response);
+                        Elements elements = doc.select(".item");
+                        for (Element element : elements) {
+                            Profile profile = new Profile();
+                            profile.setTitle(element.select(".details a").text());
+                            profile.setProfession(element.select(".details p").text());
+                            profile.setImageURL(element.select(".thumb img").attr("src"));
+                            profiles.add(profile);
+                        }
+
+                        Intent i = new Intent(MainActivity.this, SearchResultsActivity.class);
+                        i.putExtra("date",months[datePicker.getMonth()]+" "+datePicker.getDayOfMonth());
+                        i.putExtra("profiles", new ProfileListBundle(profiles));
+                        startActivity(i);
+
+                        searchButton.setEnabled(true);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(),"Didn't work",Toast.LENGTH_SHORT).show();
+            }
+        });
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 }

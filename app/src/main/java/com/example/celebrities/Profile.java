@@ -1,12 +1,11 @@
 package com.example.celebrities;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class Profile implements Serializable {
     private String title;
     private String profession;
-    private Date birthday;
+    private String birthday;
     private String birthPlace;
     private int age;
     private String sign;
@@ -54,11 +53,10 @@ public class Profile implements Serializable {
         this.profession = profession;
     }
 
-    public Date getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
-
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
