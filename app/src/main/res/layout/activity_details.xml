@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    >
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25px"
+        android:layout_marginRight="25px"
+        android:layout_marginTop="25px"
+        android:gravity="center"
+        android:id="@+id/bg_details"
+        android:background="@color/white"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15pt"
+            android:id="@+id/celebrity_name"
+            android:textStyle="bold"
+            android:layout_marginTop="15pt"
+            android:layout_marginBottom="15pt"
+            />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:background="@color/white"
+            >
+            <com.android.volley.toolbox.NetworkImageView
+                android:layout_width="50pt"
+                android:layout_height="50pt"
+                android:id="@+id/celebrity_picture"
+                android:layout_weight="3"
+                android:layout_margin="10dp"
+                android:layout_gravity="left"
+                />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:background="@color/white"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="8pt"
+                    android:id="@+id/celebrity_profession"
+                    android:textStyle="bold"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="8pt"
+                    android:id="@+id/celebrity_birthday"
+                    android:textStyle="bold"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="8pt"
+                    android:id="@+id/celebrity_birthplace"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="8pt"
+                    android:id="@+id/celebrity_age"
+                    android:textStyle="bold"
+                    />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="10pt"
+            android:id="@+id/celebrity_title"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="8pt"
+            android:id="@+id/celebrity_description"
+            android:layout_marginTop="5pt"
+            android:layout_marginBottom="15pt"
+            android:paddingLeft="5pt"
+            android:paddingRight="5pt"
+            />
+    </LinearLayout>
+
+</RelativeLayout>
