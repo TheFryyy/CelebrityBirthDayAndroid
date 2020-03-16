@@ -5,27 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
+    tools:context=".activities.SearchResultsActivity"
     >
 
-    <TextView
-        android:id="@+id/numberOfResults"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:layout_margin="10dp"
-        >
-    </TextView>
-    <ListView
-        android:id="@+id/list"
+    <fragment
+        android:id="@+id/fragment_celeb_list"
+        android:name="com.example.celebrities.fragments.CelebrityListFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:dividerHeight="10dp"
-        android:divider="@android:color/transparent"
-        >
-    </ListView>
+        android:layout_height="match_parent">
+    </fragment>
 
 
 </RelativeLayout>

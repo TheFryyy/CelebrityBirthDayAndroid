@@ -1,4 +1,6 @@
-package com.example.celebrities;
+package com.example.celebrities.utils;
+
+import com.example.celebrities.model.Profile;
 
 import java.io.Serializable;
 import java.util.List;

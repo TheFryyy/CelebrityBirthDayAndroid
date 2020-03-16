@@ -1,4 +1,4 @@
-package com.example.celebrities;
+package com.example.celebrities.utils;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -23,7 +23,7 @@ public class Accelerometer {
     private Sensor sensor;
     private SensorEventListener sensorEventListener;
 
-    Accelerometer(Context context)
+    public Accelerometer(Context context)
     {
         sensorManager = (SensorManager) context.getSystemService(context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
@@ -34,12 +34,9 @@ public class Accelerometer {
                 {
                     listener.onTranslation(event.values[0], event.values[1], event.values[2]);
                 }
-
             }
-
             @Override
             public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
             }
         };
 

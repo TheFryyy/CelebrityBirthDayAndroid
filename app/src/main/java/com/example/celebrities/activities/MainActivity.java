@@ -1,4 +1,4 @@
-package com.example.celebrities;
+package com.example.celebrities.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
@@ -16,6 +16,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.celebrities.model.Profile;
+import com.example.celebrities.utils.Accelerometer;
+import com.example.celebrities.utils.ProfileListBundle;
+import com.example.celebrities.R;
+
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -27,7 +33,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private DatePicker datePicker;
     private Accelerometer accelerometer;
-    public float shakeSensitivity = 5.0f;
+    public float shakeSensitivity = 0.1f;
 
     private String[] months;
 
@@ -35,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         accelerometer = new Accelerometer(this);
         accelerometer.setListener(new Accelerometer.Listener() {
             @Override
@@ -128,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         for (Element element : elements) {
                             Profile profile = new Profile();
                             profile.setTitle(element.select(".details a").text());
+                            profile.setDetailPageURL(element.select(".details a").attr("href"));
                             profile.setProfession(element.select(".details p").text());
                             profile.setImageURL(element.select(".thumb img").attr("src"));
                             profiles.add(profile);

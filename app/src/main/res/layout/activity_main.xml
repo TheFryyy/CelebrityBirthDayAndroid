@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".activities.MainActivity"
     android:background="@color/background">
 
     <LinearLayout
@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20pt"
-            android:layout_marginTop="50pt"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="20pt"
             android:text="Check which celibrities are born on the same date"
             android:textStyle="bold"
@@ -42,7 +42,6 @@
             android:datePickerMode="spinner"
             android:calendarViewShown="false"
             android:id="@+id/date_picker"
-            android:layout_marginTop="50dp"
             style="@style/MyDatePicker"
             />
 
@@ -50,7 +49,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/purple"
-            android:layout_marginTop="20dp"
             android:layout_centerInParent="true"
             android:id="@+id/searchButtonAndProgress"
             android:clickable="true"

@@ -1,52 +1,73 @@
-package com.example.celebrities;
+package com.example.celebrities.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
+
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
+
+import com.example.celebrities.model.Profile;
+import com.example.celebrities.utils.ProfileListBundle;
+import com.example.celebrities.utils.ProfilesAdapter;
+import com.example.celebrities.R;
+import com.example.celebrities.fragments.CelebrityListFragment;
+import com.example.celebrities.fragments.DetailsFragment;
+
 import java.util.List;
 
-
-public class SearchResultsActivity extends AppCompatActivity {
+public class SearchResultsActivity extends AppCompatActivity implements CelebrityListFragment.OnFragmentInteractionListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
 
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setBackgroundDrawable(
                 new ColorDrawable(getResources().getColor(R.color.purple)));
 
-        setTitle(getIntent().getStringExtra("date"));
+        setTitle("Results for "+getIntent().getStringExtra("date"));
 
         final ProfileListBundle profileListBundle = (ProfileListBundle) getIntent().getSerializableExtra("profiles");
 
-        TextView numberOfResults = (TextView) findViewById(R.id.numberOfResults);
-        numberOfResults.setText(profileListBundle.getProfiles().size()+" celebrities found");
-
-
         ProfilesAdapter adapter = new ProfilesAdapter(this, profileListBundle.getProfiles());
         ListView listview = (ListView)findViewById(R.id.list);
+        listview.setAdapter(adapter);
+
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+                if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+                    Intent detailIntent = new Intent(SearchResultsActivity.this, DetailsActivity.class);
+                    detailIntent.putExtra("profile",profileListBundle.getProfiles().get(position));
+                    startActivity(detailIntent);
+
+                }else{
+                    DetailsFragment detailsFragment = new DetailsFragment();
+                    Bundle args = new Bundle();
+                    args.putSerializable("profile",profileListBundle.getProfiles().get(position));
+                    detailsFragment.setArguments(args);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container,detailsFragment).commit();
+                }
+                /*
                 Intent detailIntent = new Intent(SearchResultsActivity.this, Details.class);
                 detailIntent.putExtra("profile",profileListBundle.getProfiles().get(position));
                 startActivity(detailIntent);
+                */
             }
         });
-        listview.setAdapter(adapter);
     }
 
-    /* **********  this function handle the way the user will share celebrities born the same day as him  *********  */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -67,6 +88,11 @@ public class SearchResultsActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
 
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -74,6 +100,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_share, menu);
         return true;
     }
+
 
     /* **********  return the message which will be shared  *********  */
     public String getBodyMessage()

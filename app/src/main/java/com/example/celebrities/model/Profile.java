@@ -1,4 +1,4 @@
-package com.example.celebrities;
+package com.example.celebrities.model;
 
 import java.io.Serializable;
 
@@ -11,6 +11,9 @@ public class Profile implements Serializable {
     private String sign;
     private String description;
     private String imageURL;
+    private String detailPageURL;
+    private String name;
+
 
     public Profile(){
     }
@@ -20,12 +23,14 @@ public class Profile implements Serializable {
         return "Profile{" +
                 "title='" + title + '\'' +
                 ", profession='" + profession + '\'' +
-                ", birthday=" + birthday +
+                ", birthday='" + birthday + '\'' +
                 ", birthPlace='" + birthPlace + '\'' +
                 ", age=" + age +
                 ", sign='" + sign + '\'' +
                 ", description='" + description + '\'' +
-                ", image='" + imageURL + '\'' +
+                ", imageURL='" + imageURL + '\'' +
+                ", detailPageURL='" + detailPageURL + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 
@@ -39,6 +44,14 @@ public class Profile implements Serializable {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setTitle(String title) {
@@ -56,6 +69,15 @@ public class Profile implements Serializable {
     public String getBirthday() {
         return birthday;
     }
+
+    public String getDetailPageURL() {
+        return detailPageURL;
+    }
+
+    public void setDetailPageURL(String detailPageURL) {
+        this.detailPageURL = detailPageURL;
+    }
+
     public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
