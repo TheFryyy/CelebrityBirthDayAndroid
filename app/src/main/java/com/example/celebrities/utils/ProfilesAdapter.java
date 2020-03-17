@@ -13,7 +13,6 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.example.celebrities.R;
 import com.example.celebrities.model.Profile;
-import com.example.celebrities.utils.CustomVolleyRequest;
 
 import java.util.List;
 

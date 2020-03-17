@@ -1,18 +1,14 @@
 package com.example.celebrities.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NavUtils;
 
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.celebrities.R;
-import com.example.celebrities.fragments.CelebrityListFragment;
 import com.example.celebrities.fragments.DetailsFragment;
 import com.example.celebrities.model.Profile;
 
