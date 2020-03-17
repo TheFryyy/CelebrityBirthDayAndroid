@@ -4,6 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +25,7 @@ import com.example.celebrities.model.Profile;
 import com.example.celebrities.utils.Accelerometer;
 import com.example.celebrities.utils.ProfileListBundle;
 import com.example.celebrities.R;
+import com.squareup.seismic.ShakeDetector;
 
 
 import org.jsoup.Jsoup;
@@ -30,43 +36,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, ShakeDetector.Listener{
     private DatePicker datePicker;
-    private Accelerometer accelerometer;
-    public float shakeSensitivity = 0.1f;
-
+    private SensorManager sensorMgr;
     private String[] months;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        accelerometer = new Accelerometer(this);
-        accelerometer.setListener(new Accelerometer.Listener() {
-            @Override
-            public void onTranslation(float tx, float ty, float tz) {
-                if (tx > shakeSensitivity || tx< -shakeSensitivity) {
-                    searchCelebrities();
-                }
 
-            }
-        });
+        /* *****  Initialize sensor manager (seismic library) to detect shakes ***** */
+        SensorManager sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        ShakeDetector sd = new ShakeDetector(this);
+        sd.start(sensorManager);
 
         getSupportActionBar().setBackgroundDrawable(
                 new ColorDrawable(getResources().getColor(R.color.purple)));
 
-        datePicker = findViewById(R.id.date_picker); // recover the DatePicker with it id
+        datePicker = findViewById(R.id.date_picker);
 
-        /* *****  Default initiation  ***** */
+        /* *****  Default initialization  ***** */
         datePicker.init(1998, 7, 17, null);
 
+
+        /* *****  Months array for url research  ***** */
         months = new String[] {"january","february","march","april","may","june","july","august","september","october","november","december"};
     }
     protected void onResume()
     {
         super.onResume();
 
-        accelerometer.register();
 
         /* *****  Search for  the saved date and update the DatePicker when resuming the activity  ***** */
         int year = loadDate()[0];
@@ -81,12 +81,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    protected  void onPause()
-    {
-        super.onPause();
-
-        accelerometer.unregister();
-    }
 
     protected void saveDate(int year, int month, int dayOfMonth){ // function which save the date using shared preferences to make the date persistent
         SharedPreferences sharedPreferences = getSharedPreferences("shared_prefs", MODE_PRIVATE );
@@ -111,23 +105,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void searchCelebrities()
     {
+
         RequestQueue queue = Volley.newRequestQueue(this);
+
+        /* *****  create the url corresponding to the search   ***** */
         String url ="https://www.thefamousbirthdays.com/"+months[datePicker.getMonth()]+"-"+datePicker.getDayOfMonth();
+
+        /* *****  Get layout objects  ***** */
+
         final ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         final Button searchButton = (Button) findViewById(R.id.searchButton);
 
+        /* *****  Show progress bar  ***** */
         progressBar.setVisibility(View.VISIBLE);
+
         searchButton.setText("Searching ...");
         searchButton.setEnabled(false);
+
+        /* *****  Create Volley get request to retrieve html code ***** */
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        /* *****  Hide progress bar ***** */
                         progressBar.setVisibility(View.INVISIBLE);
                         searchButton.setText("Search");
 
                         List<Profile> profiles = new ArrayList<>();
 
+                        /* *****  HTML parsing ***** */
                         Document doc = Jsoup.parse(response);
                         Elements elements = doc.select(".item");
                         for (Element element : elements) {
@@ -139,9 +145,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             profiles.add(profile);
                         }
 
+                        /* *****  opening a new activity with date and profiles list extras ***** */
                         Intent i = new Intent(MainActivity.this, SearchResultsActivity.class);
                         i.putExtra("date",months[datePicker.getMonth()]+" "+datePicker.getDayOfMonth());
-                        i.putExtra("profiles", new ProfileListBundle(profiles));
+                        i.putExtra("profiles", new ProfileListBundle(profiles)); //serializable object to pass the list between activities
                         startActivity(i);
 
                         searchButton.setEnabled(true);
@@ -150,10 +157,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                /* *****  Show a toast if an error occured ***** */
                 Toast.makeText(getApplicationContext(),"Didn't work",Toast.LENGTH_SHORT).show();
             }
         });
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
+    }
+
+    @Override
+    public void hearShake() {
+        /* *****  Automatic search if a shake is detected ***** */
+        searchCelebrities();
     }
 }

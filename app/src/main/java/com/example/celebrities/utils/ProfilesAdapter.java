@@ -17,6 +17,7 @@ import com.example.celebrities.utils.CustomVolleyRequest;
 
 import java.util.List;
 
+/* *****  This class permits to fill the listview with custom items ***** */
 public class ProfilesAdapter extends ArrayAdapter<Profile> {
     private Context context;
     private List<Profile> list;

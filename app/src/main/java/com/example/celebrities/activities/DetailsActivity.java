@@ -25,6 +25,7 @@ public class DetailsActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
+        /* *****  Retrieve profile object  ***** */
         profile = (Profile) getIntent().getSerializableExtra("profile");
         setTitle(profile.getTitle());
 
@@ -32,6 +33,7 @@ public class DetailsActivity extends AppCompatActivity{
         getSupportActionBar().setBackgroundDrawable(
                 new ColorDrawable(getResources().getColor(R.color.purple)));
 
+        /* *****  Dynamically create the fragment and replace it with container  ***** */
         DetailsFragment detailsFragment = new DetailsFragment();
         Bundle args = new Bundle();
         args.putSerializable("profile",profile);
@@ -43,10 +45,11 @@ public class DetailsActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                //NavUtils.navigateUpFromSameTask(this);
+                /* *****  Go to previous view in the stack if back button is clicked  ***** */
                 super.onBackPressed();
                 return true;
             case R.id.action_share:
+                /* *****  Show share options if share is clicked  ***** */
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("text/plain");
                 String shareSubject = "which celebrity was born on the same day as me ?";

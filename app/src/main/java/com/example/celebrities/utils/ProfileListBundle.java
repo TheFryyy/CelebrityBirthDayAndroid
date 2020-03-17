@@ -5,6 +5,8 @@ import com.example.celebrities.model.Profile;
 import java.io.Serializable;
 import java.util.List;
 
+
+/* *****  This class permits to pass a list of profiles between activities  ***** */
 public class ProfileListBundle implements Serializable {
     private List<Profile> profiles;
 

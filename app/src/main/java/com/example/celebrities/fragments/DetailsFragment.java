@@ -72,7 +72,7 @@ public class DetailsFragment extends Fragment {
     public void loadDetails(View view) {
 
         RequestQueue queue = Volley.newRequestQueue(getContext());
-
+        /* *****  Get layout objects  ***** */
         final ProgressBar progressBar = view.findViewById(R.id.detailsProgressBar);
         final TextView celebrity_name = view.findViewById(R.id.celebrity_name);
         final NetworkImageView imageView = view.findViewById(R.id.celebrity_picture);
@@ -84,6 +84,7 @@ public class DetailsFragment extends Fragment {
         final TextView description = view.findViewById(R.id.celebrity_description);
         progressBar.setVisibility(View.VISIBLE);
 
+        /* *****  Create Volley get request to retrieve html code ***** */
         String url = profile.getDetailPageURL();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {

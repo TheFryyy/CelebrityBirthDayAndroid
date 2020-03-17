@@ -11,6 +11,8 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
 
+
+/* *****  This class facilitates the volley requests ***** */
 public class CustomVolleyRequest {
     private static CustomVolleyRequest customVolleyRequest;
     private static Context context;
